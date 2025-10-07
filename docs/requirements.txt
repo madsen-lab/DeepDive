@@ -1,0 +1,11 @@
+sphinx
+sphinx-book-theme
+nbsphinx
+myst-parser
+jupyter
+ipython
+pandas
+matplotlib
+seaborn
+numpy
+pandoc

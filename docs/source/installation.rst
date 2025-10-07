@@ -11,5 +11,5 @@ Installing DeepDive
 ##############
 You can install DeepDive through our Github:
 
-    pip install git+https://github.com/madlab/deepdive
+    pip install git+https://github.com/madsen-lab/DeepDive
 

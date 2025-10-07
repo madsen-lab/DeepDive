@@ -7,10 +7,17 @@
 
 
 
+
 extensions = [
-    "nbsphinx",   #require pandoc
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.mathjax",
+    "sphinx_book_theme",
+    "nbsphinx",
 ]
 
+nbsphinx_execute = "never"
 
 
 
@@ -37,3 +44,12 @@ exclude_patterns = []
 html_theme = 'sphinx_book_theme'
 html_logo = "../_static/img/logo.png"
 html_static_path = ['_static']
+
+html_title = "DeepDive Documentation"
+
+html_theme_options = {
+    "repository_url": "https://github.com/madsen-lab/DeepDive",
+    "use_repository_button": True,
+    "use_issues_button": True,
+    "use_download_button": True,
+}
