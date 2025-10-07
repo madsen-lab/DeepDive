@@ -7,7 +7,7 @@ It enables:
 - **Interpretation of regulatory variation** across cells and conditions  
 
 <p align="center">
-  <img src="docs/_static/deepdive_schematic.png" width="600">
+  <img src="docs/_static/img/overview.png" width="600">
 </p>
 
 ## Key Features
@@ -52,10 +52,10 @@ pip install -e .
 - NumPy / Pandas / Seaborn / Matplotlib
 
 ## Citation 
-If you find DeepDive useful in your research, please consider citing our manuscript 
+If you find DeepDive useful in your research, please consider citing our manuscript:
 ```
 @article{moeller2025DeepDIVE,
-  title={title},
+  title={Disentangling covariate effects on single cell-resolved epigenomes with DeepDive},
   author={Moeller, Andreas and Madsen, Jesper},
   journal={BioRxiv},
   year={2025}
