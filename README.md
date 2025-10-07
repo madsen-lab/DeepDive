@@ -22,7 +22,7 @@ DeepDive models each cell’s chromatin accessibility profile \( x \) as a combi
 - **Known covariates** (e.g., cell type, sex, batch)
 - **Unknown latent variation**
 
-It learns to disentangle these through a **conditional variational autoencoder** and an **adversarial network** that penalizes covariate leakage into the latent space.
+It learns to disentangle these through **conditional variational autoencoders** and **adversarial networks** that penalizes covariate leakage into the latent space.
 
 ## Documentation
 
