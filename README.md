@@ -7,7 +7,7 @@ It enables:
 - **Interpretation of regulatory variation** across cells and conditions  
 
 <p align="center">
-  <img src="docs/_static/img/overview.png" width="600">
+  <img src="docs/_static/img/overview.png" width="800">
 </p>
 
 ## Key Features
