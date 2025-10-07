@@ -1,0 +1,706 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Counterfactual Prediction with DeepDive &#8212; DeepDive  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/Counterfactual';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Estimating effect sizes with a DeepDive Model" href="Effect_size_estimation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="DeepDive  documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="DeepDive  documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Training.html">Training a DeepDive Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Effect_size_estimation.html">Estimating effect sizes with a DeepDive Model</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Counterfactual Prediction with DeepDive</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/tutorials/Counterfactual.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Counterfactual Prediction with DeepDive</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#1.-Load-and-preprocess-the-dataset">1. Load and preprocess the dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#2.-Create-a-held-out-dataset-for-counterfactual-prediction">2. Create a held-out dataset for counterfactual prediction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#3.-Define-model-and-training-parameters">3. Define model and training parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#5.-Train-DeepDive">5. Train DeepDive</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#6.-Reload-the-trained-model">6. Reload the trained model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#7.-Compute-ground-truth-average-profile">7. Compute ground truth average profile</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#8.-Predict-counterfactuals">8. Predict counterfactuals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#9.-Evaluate-counterfactual-prediction">9. Evaluate counterfactual prediction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Summary">Summary</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="Counterfactual-Prediction-with-DeepDive">
+<h1>Counterfactual Prediction with DeepDive<a class="headerlink" href="#Counterfactual-Prediction-with-DeepDive" title="Link to this heading">#</a></h1>
+<p>This tutorial demonstrates how to use <strong>DeepDive</strong> for counterfactual prediction in single-cell ATAC-seq data. Specifically, we show how to predict what chromatin accessibility profiles of a held-out cell type (Hepatoblasts) would look like if they had been observed in a particular donor sample.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import scanpy as sc
+import DeepDive
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from utils import reads_to_fragments, rsquared
+</pre></div>
+</div>
+</div>
+<section id="1.-Load-and-preprocess-the-dataset">
+<h2>1. Load and preprocess the dataset<a class="headerlink" href="#1.-Load-and-preprocess-the-dataset" title="Link to this heading">#</a></h2>
+<p>We start with an <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> object containing single-cell chromatin accessibility profiles. Here we use the liver <a class="reference external" href="https://doi.org/10.1126/science.aba7612">sciATAC-seq3</a> dataset (<code class="docutils literal notranslate"><span class="pre">sciatac3_liver_10k.h5ad</span></code>), subset from the full dataset (dataset and preprocessing better described in the <code class="docutils literal notranslate"><span class="pre">training.ipynb</span></code> notebook).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata = sc.read_h5ad(&#39;data/sciatac3_liver_10k.h5ad&#39;)
+
+# Filter genes detected in fewer than 1% of cells
+min_cells = int(adata.shape[0] * 0.01)
+sc.pp.filter_genes(adata, min_cells=min_cells)
+
+# Ensure unique cell IDs
+adata.obs_names_make_unique()
+
+# Convert raw reads into fragments
+reads_to_fragments(adata)
+adata.X = adata.layers[&#39;fragments&#39;]
+</pre></div>
+</div>
+</div>
+</section>
+<section id="2.-Create-a-held-out-dataset-for-counterfactual-prediction">
+<h2>2. Create a held-out dataset for counterfactual prediction<a class="headerlink" href="#2.-Create-a-held-out-dataset-for-counterfactual-prediction" title="Link to this heading">#</a></h2>
+<p>We hold out <strong>Hepatoblast cells</strong> from one donor (<strong>sample_7_liver</strong>) to use as ground truth for evaluating counterfactual predictions.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_ho = adata[(adata.obs[&#39;cell_type&#39;].astype(str) == &#39;Hepatoblasts&#39;) &amp; (adata.obs[&#39;sample_name&#39;].astype(str) == &#39;sample_7_liver&#39;)].copy()
+adata = adata[~adata.obs_names.isin(adata_ho.obs_names)]
+<br/></pre></div>
+</div>
+</div>
+</section>
+<section id="3.-Define-model-and-training-parameters">
+<h2>3. Define model and training parameters<a class="headerlink" href="#3.-Define-model-and-training-parameters" title="Link to this heading">#</a></h2>
+<p>We specify model hyperparameters and training settings.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>n_decoders = 5
+model_params = {
+    &#39;n_epochs_pretrain_ae&#39; : 200*n_decoders,
+    &#39;n_decoders&#39; : n_decoders,
+}
+train_params = {
+    &#39;max_epoch&#39; : 300*n_decoders,
+    &#39;batch_size&#39; : 1024,
+    &#39;shuffle&#39; : True
+}
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>discrete_covriate_keys = [&#39;sample_name&#39;, &#39;sex&#39;, &#39;batch&#39;, &#39;cell_type&#39;]
+continuous_covriate_keys = [&#39;day_of_pregnancy&#39;]
+</pre></div>
+</div>
+</div>
+</section>
+<section id="5.-Train-DeepDive">
+<h2>5. Train DeepDive<a class="headerlink" href="#5.-Train-DeepDive" title="Link to this heading">#</a></h2>
+<p>We initialize and train the model using the training dataset.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model = DeepDive.DeepDive(adata = adata,
+                        discrete_covariate_names = discrete_covriate_keys,
+                        continuous_covariate_names = continuous_covriate_keys,
+                        **model_params
+                       )
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model.train_model(adata, None,
+                  **train_params)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Epoch Train [1500 / 1500]: 100%|██████████| 10/10 [00:00&lt;00:00, 11.20it/s, ETA=01d:00h:20:m53s|01d:00h:20:m53s, kl_loss=1.7, recon_loss=3.2e+3]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model.save(&#39;model&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+DeepDIVE model saved at: model
+</pre></div></div>
+</div>
+</section>
+<section id="6.-Reload-the-trained-model">
+<h2>6. Reload the trained model<a class="headerlink" href="#6.-Reload-the-trained-model" title="Link to this heading">#</a></h2>
+<p>We reload the model for downstream prediction.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model = DeepDive.DeepDive(adata = adata,
+                        discrete_covariate_names = discrete_covriate_keys,
+                        continuous_covariate_names = continuous_covriate_keys,
+                        **model_params
+                       )
+model = model.load(adata, &#39;model&#39;)
+</pre></div>
+</div>
+</div>
+</section>
+<section id="7.-Compute-ground-truth-average-profile">
+<h2>7. Compute ground truth average profile<a class="headerlink" href="#7.-Compute-ground-truth-average-profile" title="Link to this heading">#</a></h2>
+<p>We normalize the held-out dataset (<code class="docutils literal notranslate"><span class="pre">adata_ho</span></code>) and compute its average accessibility profile.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.normalize_total(adata_ho, target_sum = 10_000)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mean_ho = adata_ho.to_df().mean()
+</pre></div>
+</div>
+</div>
+</section>
+<section id="8.-Predict-counterfactuals">
+<h2>8. Predict counterfactuals<a class="headerlink" href="#8.-Predict-counterfactuals" title="Link to this heading">#</a></h2>
+<p>We compare three profiles:</p>
+<ul class="simple">
+<li><p>Ground truth (Hepatoblasts from <code class="docutils literal notranslate"><span class="pre">sample_7</span></code>)</p></li>
+<li><p>Observed average (all other cell types from <code class="docutils literal notranslate"><span class="pre">sample_7</span></code>)</p></li>
+<li><p>Counterfactual prediction (Hepatoblasts predicted by DeepDive in <code class="docutils literal notranslate"><span class="pre">sample_7</span></code>)</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Observed sample 7 (excluding Hepatoblasts)
+sample_7 = adata[adata.obs[&#39;sample_name&#39;].astype(str) == &#39;sample_7_liver&#39;].copy()
+rec = model.predict(sample_7, library_size=10_000)
+mean_no = rec.to_df().mean()
+
+# Counterfactual prediction: force cell_type = Hepatoblasts
+sample_7.obs[&#39;ct_org&#39;] = sample_7.obs[&#39;cell_type&#39;].copy()
+sample_7.obs[&#39;cell_type&#39;] = &#39;Hepatoblasts&#39;
+rec = model.predict(sample_7, library_size=10_000)
+mean_cf = rec.to_df().mean()
+<br/></pre></div>
+</div>
+</div>
+</section>
+<section id="9.-Evaluate-counterfactual-prediction">
+<h2>9. Evaluate counterfactual prediction<a class="headerlink" href="#9.-Evaluate-counterfactual-prediction" title="Link to this heading">#</a></h2>
+<p>We compare the counterfactual predictions against the ground truth and the observed average using scatter plots and R² scores.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Counterfactual vs Ground truth
+plt.subplots(figsize=(2,2))
+sns.scatterplot(x=mean_ho, y=mean_cf, s=10, edgecolor=&#39;k&#39;)
+plt.text(x=0.1, y=5, s=f&quot;R2={round(rsquared(mean_ho, mean_cf), 2)}&quot;)
+plt.xlabel(&#39;Ground truth&#39;)
+plt.ylabel(&#39;Counterfactual&#39;)
+
+# Counterfactual vs All-cell average
+plt.subplots(figsize=(2,2))
+sns.scatterplot(x=mean_no, y=mean_cf, s=10, edgecolor=&#39;k&#39;)
+plt.text(x=0.1, y=5, s=f&quot;R2={round(rsquared(mean_no, mean_cf), 2)}&quot;)
+plt.xlabel(&#39;Ground truth&#39;)
+plt.ylabel(&#39;All cell average&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Text(0, 0.5, &#39;All cell average&#39;)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_Counterfactual_22_1.png" src="../_images/tutorials_Counterfactual_22_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_Counterfactual_22_2.png" src="../_images/tutorials_Counterfactual_22_2.png" />
+</div>
+</div>
+</section>
+<section id="Summary">
+<h2>Summary<a class="headerlink" href="#Summary" title="Link to this heading">#</a></h2>
+<p>In this tutorial, we:</p>
+<ul class="simple">
+<li><p>Preprocessed an ATAC-seq dataset</p></li>
+<li><p>Held out Hepatoblast cells from one donor</p></li>
+<li><p>Trained <code class="docutils literal notranslate"><span class="pre">DeepDive</span></code> to disentangle covariates</p></li>
+<li><p>Predicted counterfactual accessibility profiles</p></li>
+<li><p>Compared predictions to ground truth and donor-wide averages</p></li>
+</ul>
+<p>This demonstrates how DeepDive can be used for counterfactual prediction to study the regulatory landscape of unobserved cell–donor combinations.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Effect_size_estimation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Estimating effect sizes with a DeepDive Model</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#1.-Load-and-preprocess-the-dataset">1. Load and preprocess the dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#2.-Create-a-held-out-dataset-for-counterfactual-prediction">2. Create a held-out dataset for counterfactual prediction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#3.-Define-model-and-training-parameters">3. Define model and training parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#5.-Train-DeepDive">5. Train DeepDive</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#6.-Reload-the-trained-model">6. Reload the trained model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#7.-Compute-ground-truth-average-profile">7. Compute ground truth average profile</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#8.-Predict-counterfactuals">8. Predict counterfactuals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#9.-Evaluate-counterfactual-prediction">9. Evaluate counterfactual prediction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Summary">Summary</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Andreas Møller and Jesper Madsen
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Andreas Møller and Jesper Madsen.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
