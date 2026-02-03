@@ -1,5 +1,6 @@
 from setuptools import setup, find_packages
 import os
+import sys
 
 if sys.version_info.major != 3:
     raise RuntimeError("DeepDive requires Python 3")
