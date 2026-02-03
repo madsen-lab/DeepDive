@@ -377,7 +377,7 @@ class DeepDive(nn.Module, BaseMixin):
                     min_lr=self.lr_min,
                     mode="max",
                     threshold_mode="abs",
-                    verbose=True,
+                    ##verbose=True,
                 )
             )
 
@@ -392,7 +392,7 @@ class DeepDive(nn.Module, BaseMixin):
                     min_lr=self.lr_min,
                     mode="max",
                     threshold_mode="abs",
-                    verbose=True,
+                    #verbose=True,
                 )
             )
         if has_covariates or has_continuous_covariates:
@@ -405,7 +405,7 @@ class DeepDive(nn.Module, BaseMixin):
                     min_lr=self.lr_min,
                     mode="min",
                     threshold_mode="abs",
-                    verbose=True,
+                    #verbose=True,
                 )
             )
 
@@ -417,7 +417,7 @@ class DeepDive(nn.Module, BaseMixin):
                 min_lr=self.lr_min,
                 mode="min",
                 threshold_mode="abs",
-                verbose=True,
+                #verbose=True,
             )
 
     def _get_unknown_parameters(self, use_decoder):
