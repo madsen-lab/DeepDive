@@ -140,6 +140,7 @@ class DeepDive(nn.Module, BaseMixin):
         n_decoders: int = 1,
         device: str = "cuda",
         seed: int = 0,
+        unlock_all: bool = False,
         pin_memory: Optional[bool] = None, 
         **kwargs,
     ) -> None:
