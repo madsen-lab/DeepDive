@@ -817,6 +817,26 @@ class DeepDive(nn.Module, BaseMixin):
                     + unknown_adversary_continuous_covariates_loss,
                     use_decoder,
                 )
+        elif self.unlock_all:
+            if self.iteration % 3 == 0:
+                self.train_all_adversary(
+                    recon_loss,
+                    kl_loss,
+                    known_adversary_discrete_covariates_loss
+                    + known_adversary_continuous_covariates_loss,
+                    unknown_adversary_discrete_covariates_loss
+                    + unknown_adversary_continuous_covariates_loss,
+                )
+            else:
+                self.open_all(
+                    recon_loss,
+                    kl_loss,
+                    known_adversary_discrete_covariates_loss
+                    + known_adversary_continuous_covariates_loss,
+                    unknown_adversary_discrete_covariates_loss
+                    + unknown_adversary_continuous_covariates_loss,
+                    use_decoder,
+                )
         else:
             if self.iteration % 3 == 0:
                 self.train_known_adversary(
@@ -894,6 +914,43 @@ class DeepDive(nn.Module, BaseMixin):
         adv_loss = known_adversary_loss
         adv_loss.backward()
         self.optimizer_known_adversaries.step()
+    
+    ## For debugging
+    def open_all(
+        self,
+            recon_loss,
+            kl_loss,
+            known_adversary_loss,
+            unknown_adversary_loss,
+            use_decoder,
+    ):
+        # Known
+        self.optimizer_known_list[use_decoder].zero_grad()
+        total_loss = recon_loss - known_adversary_loss
+        total_loss.backward()
+        self.optimizer_known_list[use_decoder].step()
+
+        # unknown
+        self.optimizer_unknown_list[use_decoder].zero_grad()
+        total_loss = recon_loss + kl_loss
+        total_loss.backward()
+        self.optimizer_unknown_list[use_decoder].step()
+        
+    def train_all_adversary(
+        self,
+            recon_loss,
+            kl_loss,
+            known_adversary_loss,
+            unknown_adversary_loss,
+            use_decoder,
+        ):
+        self.optimizer_known_adversaries.zero_grad()
+        known_adversary_loss.backward()
+        self.optimizer_known_adversaries.step()
+
+        self.optimizer_unknown_adversaries.zero_grad()
+        unknown_adversary_loss.backward()
+        self.optimizer_unknown_adversaries.step()
 
     def train_model(
         self,
