@@ -947,7 +947,6 @@ class DeepDive(nn.Module, BaseMixin):
             kl_loss,
             known_adversary_loss,
             unknown_adversary_loss,
-            use_decoder,
         ):
         self.optimizer_known_adversaries.zero_grad()
         known_adversary_loss.backward()
