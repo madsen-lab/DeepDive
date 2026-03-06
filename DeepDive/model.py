@@ -836,6 +836,7 @@ class DeepDive(nn.Module, BaseMixin):
                     unknown_adversary_discrete_covariates_loss
                     + unknown_adversary_continuous_covariates_loss,
                     use_decoder,
+                    self.iteration % 2 == 0
                 )
         else:
             if self.iteration % 3 == 0:
@@ -923,18 +924,21 @@ class DeepDive(nn.Module, BaseMixin):
             known_adversary_loss,
             unknown_adversary_loss,
             use_decoder,
+            opt_unknown=True,
     ):
-        # Known
-        self.optimizer_known_list[use_decoder].zero_grad()
-        total_loss = recon_loss - known_adversary_loss
-        total_loss.backward()
-        self.optimizer_known_list[use_decoder].step()
-
-        # unknown
-        self.optimizer_unknown_list[use_decoder].zero_grad()
-        total_loss = recon_loss + kl_loss
-        total_loss.backward()
-        self.optimizer_unknown_list[use_decoder].step()
+        if opt_unknown:
+            # unknown
+            self.optimizer_unknown_list[use_decoder].zero_grad()
+            total_loss = recon_loss + kl_loss
+            total_loss.backward()
+            self.optimizer_unknown_list[use_decoder].step()
+        
+        else:    
+            # Known
+            self.optimizer_known_list[use_decoder].zero_grad()
+            total_loss = recon_loss - known_adversary_loss
+            total_loss.backward()
+            self.optimizer_known_list[use_decoder].step()
         
     def train_all_adversary(
         self,
