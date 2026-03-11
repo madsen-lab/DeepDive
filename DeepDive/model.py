@@ -7,7 +7,7 @@ import torch
 from anndata import AnnData
 
 from torch import nn
-from torch.distributions import Normal, Poisson
+from torch.distributions import Normal, Poisson, NegativeBinomial
 
 from tqdm import tqdm
 
@@ -246,7 +246,9 @@ class DeepDive(nn.Module, BaseMixin):
         self.prior = StandardPrior()
         self.px_scale_activation = nn.Softmax(dim=-1)
 
-        self.px_loc = torch.nn.Parameter(torch.randn(self.num_features))
+        #For NB and gaussian loss
+        self.px_r = torch.nn.Parameter(torch.randn(self.num_features))
+
         self._initialize_disentanglement_regularizers()
 
     def _initialize_disentanglement_regularizers(self):
@@ -448,7 +450,7 @@ class DeepDive(nn.Module, BaseMixin):
         has_continuous_covariates = self.num_continuous_covariates > 0
 
         _parameters = get_params(self.known.decoder_list[use_decoder], True) + [
-            self.px_loc
+            self.px_r
         ]
 
         if has_covariates:
@@ -486,9 +488,21 @@ class DeepDive(nn.Module, BaseMixin):
 
         if distribution == "Poisson":
             recon_loss = -Poisson(px).log_prob(x).sum(dim=-1).mean()
+        if distribution == 'NB':
+            eps = 1e-8
+            mu = px + eps
+            theta = torch.exp(self.px_r)
+
+            logits = torch.log(mu) - torch.log(theta)
+
+            recon_loss = -NegativeBinomial(
+                total_count=theta,
+                logits=logits
+            ).log_prob(x).sum(dim=-1).mean()
+            
         else:
             recon_loss = (
-                -Normal(px, torch.exp(self.px_loc)).log_prob(x).sum(dim=-1).mean()
+                -Normal(px, torch.exp(self.px_r)).log_prob(x).sum(dim=-1).mean()
             )
 
         if calculate_kl:
@@ -523,10 +537,10 @@ class DeepDive(nn.Module, BaseMixin):
             )
 
         if add_unknown:
-            qz, q_m, q_v, z, unknown = self.unknown(x_, use_decoder)
+            qz, q_m, q_v, z, unknown, px = self.unknown(x_, use_decoder)
             z_unknown = qz.loc
             if len(covars_to_add) > 0:
-                z_covs, z_cov, known = self.known(
+                z_covs, z_cov, known, px  = self.known(
                     covariates, continuous_covariates, covars_to_add, use_decoder
                 )
                 summed_scale = known + unknown
@@ -535,7 +549,7 @@ class DeepDive(nn.Module, BaseMixin):
                 z_cov = torch.zeros(batch_size, self.n_latent, device=self.device)
                 known = torch.zeros(batch_size, self.num_features, device=self.device)
         else:
-            z_covs, z_cov, known = self.known(
+            z_covs, z_cov, known, px = self.known(
                 covariates, continuous_covariates, covars_to_add, use_decoder
             )
             summed_scale = known
@@ -545,8 +559,8 @@ class DeepDive(nn.Module, BaseMixin):
         if return_predictions:
             if predict_mode == 'fraction_all':
                 all_covars = self.discrete_covariate_names + self.continuous_covariate_names
-                _, _, known_max = self.known(covariates, continuous_covariates, all_covars, use_decoder) 
-                _, _, _, _, unknown_max = self.unknown(x_, use_decoder)
+                _, _, known_max, px = self.known(covariates, continuous_covariates, all_covars, use_decoder) 
+                _, _, _, _, unknown_max, px = self.unknown(x_, use_decoder)
                 max_logits = known_max + unknown_max
                 px_scale = self.px_scale_activation(max_logits)
                 if add_unknown and len(covars_to_add) > 0:
@@ -559,8 +573,8 @@ class DeepDive(nn.Module, BaseMixin):
                 px_rate = torch.exp(library) * px_scale
             elif predict_mode == 'fraction_selected':
                 all_covars = self.discrete_covariate_names + self.continuous_covariate_names
-                _, _, known_max = self.known(covariates, continuous_covariates, all_covars, use_decoder) 
-                _, _, _, _, unknown_max = self.unknown(x_, use_decoder)
+                _, _, known_max, px = self.known(covariates, continuous_covariates, all_covars, use_decoder) 
+                _, _, _, _, unknown_max, px = self.unknown(x_, use_decoder)
                 max_logits = known_max + unknown_max
                 px_scale = self.px_scale_activation(summed_scale)
                 if add_unknown and len(covars_to_add) > 0:

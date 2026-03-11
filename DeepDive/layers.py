@@ -105,12 +105,13 @@ class known_network(nn.Module):
         if use_decoder == "all":
             px_scale_list = []
             for i in range(self.n_decoders):
-                px_scale_list.append(self.decoder_list[i](z_cov))
+                px_scale, px = self.decoder_list[i](z_cov)
+                px_scale_list.append(px_scale)
             px_scale_stack = torch.stack(px_scale_list, dim=0)
             px_scale = torch.mean(px_scale_stack, dim=0)
         else:
-            px_scale = self.decoder_list[use_decoder](z_cov)
-        return z_covs, z_cov, px_scale
+            px_scale, px = self.decoder_list[use_decoder](z_cov)
+        return z_covs, z_cov, px_scale, px
 
     def get_z_covs(
         self,
@@ -238,13 +239,14 @@ class unknown_network(nn.Module):
         if use_decoder == "all":
             px_scale_list = []
             for i in range(self.n_decoders):
-                px_scale_list.append(self.decoder_list[i](z))
+                px_scale, px = self.decoder_list[i](z)
+                px_scale_list.append(px_scale)
             px_scale_stack = torch.stack(px_scale_list, dim=0)
             px_scale = torch.mean(px_scale_stack, dim=0)
         else:
-            px_scale = self.decoder_list[use_decoder](z)
+            px_scale, px = self.decoder_list[use_decoder](z)
 
-        return qz, q_m, q_v, z, px_scale
+        return qz, q_m, q_v, z, px_scale, px
 
 # adapted from https://github.com/nitzanlab/biolord/blob/main/src/biolord/_module.py
 class RegularizedEmbedding(nn.Module):
@@ -408,7 +410,7 @@ class Decoder(nn.Module):
         px = self.px_decoder(z)
         px_scale = self.px_scale_decoder(px)
 
-        return px_scale
+        return px_scale, px
 
 
 class Classifier(nn.Module):
