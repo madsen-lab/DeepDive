@@ -629,8 +629,10 @@ class DeepDive(nn.Module, BaseMixin):
         recon_loss, kl_loss = self.loss(
             x, qz, z, q_m, q_v, px, distribution, add_unknown
         )
-
-        r2 = r2_metric(x, px, covar_concat)
+        if self.device == 'mps':
+            r2 = 0 # r2_metric(x, px, covar_concat)
+        else:
+            r2 = r2_metric(x, px, covar_concat)
 
         train_adv = self.iteration % self.adversary_steps == 0
         finish_pretrain = self.epoch > self.n_epochs_pretrain_ae
