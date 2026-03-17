@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Estimating effect sizes with a DeepDive Model &#8212; DeepDive Documentation</title>
+    <title>Evaluating latent variation &#8212; DeepDive Documentation</title>
   
   
   
@@ -44,11 +44,10 @@
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/Effect_size_estimation';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/Eval_latent';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Counterfactual Prediction with DeepDive" href="Counterfactual.html" />
-    <link rel="prev" title="Training a DeepDive Model" href="Training.html" />
+    <link rel="prev" title="Counterfactual Prediction with DeepDive" href="Counterfactual.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -165,9 +164,9 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="Training.html">Training a DeepDive Model</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Estimating effect sizes with a DeepDive Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Effect_size_estimation.html">Estimating effect sizes with a DeepDive Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Counterfactual.html">Counterfactual Prediction with DeepDive</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Eval_latent.html">Evaluating latent variation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Evaluating latent variation</a></li>
 </ul>
 
     </div>
@@ -239,7 +238,7 @@
       
       
       
-      <li><a href="https://github.com/madsen-lab/DeepDive/issues/new?title=Issue%20on%20page%20%2Ftutorials/Effect_size_estimation.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/madsen-lab/DeepDive/issues/new?title=Issue%20on%20page%20%2Ftutorials/Eval_latent.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -269,7 +268,7 @@
       
       
       
-      <li><a href="../_sources/tutorials/Effect_size_estimation.ipynb" target="_blank"
+      <li><a href="../_sources/tutorials/Eval_latent.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -353,7 +352,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Estimating effect sizes with a DeepDive Model</h1>
+    <h1>Evaluating latent variation</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -365,11 +364,9 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Imports">Imports</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#1.-Load-and-preprocess-the-dataset">1. Load and preprocess the dataset</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#2.-Define-model-and-training-parameters">2. Define model and training parameters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#3.-Train-DeepDive">3. Train DeepDive</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#4.-Compare-groups">4. Compare groups</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#5.-Compare-groups-with-covariate-constraints">5. Compare groups with covariate constraints</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#2.-Train-the-model">2. Train the model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#3.-Evaluate-latent-variation">3. Evaluate latent variation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#4.-Incorporate-residual-variation-and-retrain-the-model">4. Incorporate residual variation and retrain the model</a></li>
 </ul>
             </nav>
         </div>
@@ -381,21 +378,18 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="Estimating-effect-sizes-with-a-DeepDive-Model">
-<h1>Estimating effect sizes with a DeepDive Model<a class="headerlink" href="#Estimating-effect-sizes-with-a-DeepDive-Model" title="Link to this heading">#</a></h1>
-<p>This tutorial demonstrates how to estimate effect sizes with a <strong>DeepDive</strong> model on single-cell ATAC-seq data.</p>
+  <section id="Evaluating-latent-variation">
+<h1>Evaluating latent variation<a class="headerlink" href="#Evaluating-latent-variation" title="Link to this heading">#</a></h1>
+<p>This tutorial demonstrates how to evaluate a <strong>DeepDive</strong> model and iteratively incorporate previously unmodeled sources of variation through a second training pass.</p>
 <hr class="docutils" />
 <section id="Imports">
 <h2>Imports<a class="headerlink" href="#Imports" title="Link to this heading">#</a></h2>
-<div class="nbinput nblast docutils container">
+!pip install scanpy seaborn DeepDive<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">DeepDive</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 </pre></div>
 </div>
 </div>
@@ -410,35 +404,44 @@ document.write(`
 </section>
 <section id="1.-Load-and-preprocess-the-dataset">
 <h2>1. Load and preprocess the dataset<a class="headerlink" href="#1.-Load-and-preprocess-the-dataset" title="Link to this heading">#</a></h2>
-<p>We start with an <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> object containing single-cell chromatin accessibility profiles. Here we use the liver <a class="reference external" href="https://doi.org/10.1126/science.aba7612">sciATAC-seq3</a> dataset (<code class="docutils literal notranslate"><span class="pre">sciatac3_liver_10k.h5ad</span></code>), subset from the full dataset (dataset and preprocessing better described in the <code class="docutils literal notranslate"><span class="pre">training.ipynb</span></code> notebook).</p>
+<p>We begin with an <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> object containing single-cell chromatin accessibility profiles. In this example, we use a liver dataset (<code class="docutils literal notranslate"><span class="pre">sciatac3_liver_10k.h5ad</span></code>), which consists of 10,000 cells sampled from the <a class="reference external" href="https://doi.org/10.1126/science.aba7612">sciATAC-seq3</a> dataset.</p>
+<p>Preprocessing steps are described in more detail in the <a class="reference external" href="https://deepdive-tutorial.readthedocs.io/en/latest/tutorials/Training.html#">Training a DeepDive Model</a> tutorial.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s1">&#39;data/sciatac3_liver_10k.h5ad&#39;</span><span class="p">)</span>
-
-<span class="c1"># Filter genes detected in fewer than 1% of cells</span>
-<span class="n">min_cells</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.01</span><span class="p">)</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_cells</span><span class="o">=</span><span class="n">min_cells</span><span class="p">)</span>
-
-<span class="c1"># Ensure unique cell IDs</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">obs_names_make_unique</span><span class="p">()</span>
-
-<span class="c1"># Convert raw reads into fragments</span>
-<span class="n">reads_to_fragments</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
-<span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;fragments&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
-</section>
-<section id="2.-Define-model-and-training-parameters">
-<h2>2. Define model and training parameters<a class="headerlink" href="#2.-Define-model-and-training-parameters" title="Link to this heading">#</a></h2>
-<p>We specify model hyperparameters and training settings.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_decoders</span> <span class="o">=</span> <span class="mi">5</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">min_cells</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_cells</span><span class="o">=</span><span class="n">min_cells</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs_names_make_unique</span><span class="p">()</span>
+<span class="n">reads_to_fragments</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;fragments&#39;</span><span class="p">]</span>
+<br/></pre></div>
+</div>
+</div>
+</section>
+<section id="2.-Train-the-model">
+<h2>2. Train the model<a class="headerlink" href="#2.-Train-the-model" title="Link to this heading">#</a></h2>
+<p>We initialize and train a DeepDive model using known covariates. These include both discrete variables (e.g., sample, sex, batch) and continuous variables (e.g., day of pregnancy).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_decoders</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">model_params</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;n_epochs_pretrain_ae&#39;</span> <span class="p">:</span> <span class="mi">200</span><span class="o">*</span><span class="n">n_decoders</span><span class="p">,</span>
     <span class="s1">&#39;n_decoders&#39;</span> <span class="p">:</span> <span class="n">n_decoders</span><span class="p">,</span>
@@ -452,20 +455,16 @@ document.write(`
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">discrete_covriate_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sample_name&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;batch&#39;</span><span class="p">,</span> <span class="s1">&#39;cell_type&#39;</span><span class="p">]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">discrete_covriate_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sample_name&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;batch&#39;</span><span class="p">]</span>
 <span class="n">continuous_covriate_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;day_of_pregnancy&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
-</section>
-<section id="3.-Train-DeepDive">
-<h2>3. Train DeepDive<a class="headerlink" href="#3.-Train-DeepDive" title="Link to this heading">#</a></h2>
-<p>We initialize and train the model using the training dataset.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">DeepDive</span><span class="o">.</span><span class="n">DeepDive</span><span class="p">(</span><span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">,</span>
@@ -477,7 +476,7 @@ document.write(`
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">train_model</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
@@ -490,180 +489,182 @@ document.write(`
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Epoch Train [1500 / 1500]: 100%|██████████| 10/10 [00:00&lt;00:00, 10.10it/s, ETA=01d:00h:21:m41s|01d:00h:21:m41s, kl_loss=1.68, recon_loss=3.15e+3]
+Epoch Train [300 / 300]: 100%|██████████| 10/10 [00:00&lt;00:00, 13.03it/s, ETA=01d:00h:03:m26s|01d:00h:03:m26s, kl_loss=5.44, recon_loss=3.19e+3]
 </pre></div></div>
 </div>
-</section>
-<section id="4.-Compare-groups">
-<h2>4. Compare groups<a class="headerlink" href="#4.-Compare-groups" title="Link to this heading">#</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">DeepDive.compare_groups()</span></code> function identifies accessible regions that differ between two groups independent of disentangled covariates.</p>
-<p>In this example, we compare <strong>Hepatoblasts</strong> and <strong>Erythroblasts</strong> to identify differential chromatin accessibility patterns.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">da</span> <span class="o">=</span> <span class="n">DeepDive</span><span class="o">.</span><span class="n">compare_groups</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">adata</span><span class="p">,</span> <span class="s1">&#39;cell_type&#39;</span><span class="p">,</span> <span class="n">groupA</span> <span class="o">=</span> <span class="s1">&#39;Hepatoblasts&#39;</span><span class="p">,</span> <span class="n">groupB</span> <span class="o">=</span> <span class="s1">&#39;Erythroblasts&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">da</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
-</pre></div>
-</div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Feature</th>
-      <th>groupA</th>
-      <th>groupB</th>
-      <th>Difference</th>
-      <th>Zscore</th>
-      <th>Pvalue</th>
-      <th>FDR</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>chr1:565561-565842</td>
-      <td>0.808578</td>
-      <td>-1.587507</td>
-      <td>2.396085</td>
-      <td>1.704382</td>
-      <td>0.006697</td>
-      <td>0.055971</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>chr1:569259-569557</td>
-      <td>2.841677</td>
-      <td>1.127797</td>
-      <td>1.713880</td>
-      <td>1.223938</td>
-      <td>0.128054</td>
-      <td>0.535595</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>chr1:569659-569951</td>
-      <td>1.822991</td>
-      <td>-0.457494</td>
-      <td>2.280485</td>
-      <td>1.626589</td>
-      <td>0.011054</td>
-      <td>0.082341</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>chr1:713647-714744</td>
-      <td>0.733735</td>
-      <td>0.902667</td>
-      <td>-0.168932</td>
-      <td>-0.094762</td>
-      <td>0.999939</td>
-      <td>1.000000</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>chr1:762075-763248</td>
-      <td>-0.183651</td>
-      <td>-0.042263</td>
-      <td>-0.141388</td>
-      <td>-0.077697</td>
-      <td>0.999797</td>
-      <td>1.000000</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
-</div>
-<p>This returns a DataFrame containing:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Difference</span></code>: Effect size between the two groups</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">FDR</span></code>: False discovery rate (multiple testing–corrected p-value)</p></li>
-</ul>
-<p>We can visualize the differential results as a volcano plot.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="n">da</span><span class="o">.</span><span class="n">Difference</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">da</span><span class="o">.</span><span class="n">FDR</span><span class="p">),</span>
-    <span class="n">hue</span><span class="o">=</span><span class="n">da</span><span class="o">.</span><span class="n">FDR</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">,</span>
-    <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
-    <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-    <span class="n">s</span><span class="o">=</span><span class="mi">10</span>
-<span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;-log10 FDR&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Effect size&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DeepDive</span><span class="o">.</span><span class="n">plot_history</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Text(0.5, 0, &#39;Effect size&#39;)
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/tutorials_Effect_size_estimation_16_1.png" src="../_images/tutorials_Effect_size_estimation_16_1.png" />
+<img alt="../_images/tutorials_Eval_latent_13_0.png" src="../_images/tutorials_Eval_latent_13_0.png" />
 </div>
 </div>
+<p>The KL divergence remains relatively high, suggesting that substantial variation is still being captured in the residual (unknown) component of the model. This indicates that not all sources of structure in the data are explained by the provided covariates, and that additional biological or technical factors may still be influencing chromatin accessibility.</p>
 </section>
-<section id="5.-Compare-groups-with-covariate-constraints">
-<h2>5. Compare groups with covariate constraints<a class="headerlink" href="#5.-Compare-groups-with-covariate-constraints" title="Link to this heading">#</a></h2>
-<p>DeepDive can also control for confounding factors by fixing certain covariates. For example, to compare Hepatoblasts vs Erythroblasts while holding sex = female constant:</p>
+<section id="3.-Evaluate-latent-variation">
+<h2>3. Evaluate latent variation<a class="headerlink" href="#3.-Evaluate-latent-variation" title="Link to this heading">#</a></h2>
+<p>To assess whether unmodeled sources of variation influence chromatin accessibility, we examine the learned latent representation.</p>
+<p>Here, we compute the latent embedding without adding additional covariates and visualize it using UMAP. Clustering in this space may indicate residual structure not explained by the specified covariates.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">background</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sex&#39;</span><span class="p">:</span><span class="s1">&#39;female&#39;</span><span class="p">}</span>
-<span class="n">da</span> <span class="o">=</span> <span class="n">DeepDive</span><span class="o">.</span><span class="n">compare_groups</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">adata</span><span class="p">,</span> <span class="s1">&#39;cell_type&#39;</span><span class="p">,</span> <span class="n">groupA</span> <span class="o">=</span> <span class="s1">&#39;Hepatoblasts&#39;</span><span class="p">,</span> <span class="n">groupB</span> <span class="o">=</span> <span class="s1">&#39;Erythroblasts&#39;</span><span class="p">,</span> <span class="n">background</span> <span class="o">=</span> <span class="n">background</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">latent</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_latent</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">covars_to_add</span><span class="o">=</span><span class="p">[])</span>
 </pre></div>
 </div>
 </div>
-<p>This performs the same comparison as above but within the context of a fixed background covariate — allowing interpretation of group differences dependent the <strong>sex</strong>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">latent</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">latent</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">latent</span><span class="p">,</span> <span class="n">resolution</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">latent</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;leiden&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_Eval_latent_20_0.png" src="../_images/tutorials_Eval_latent_20_0.png" />
+</div>
+</div>
 </section>
-<section id="Summary">
-<h2>Summary<a class="headerlink" href="#Summary" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">DeepDive.compare_groups()</span></code> quantifies differential effects between categorical groups.</p></li>
-<li><p>Supports covariate-controlled comparisons via the background argument.</p></li>
-<li><p>Returns a feature-level DataFrame with effect sizes and FDR-adjusted p-values.</p></li>
-</ul>
+<section id="4.-Incorporate-residual-variation-and-retrain-the-model">
+<h2>4. Incorporate residual variation and retrain the model<a class="headerlink" href="#4.-Incorporate-residual-variation-and-retrain-the-model" title="Link to this heading">#</a></h2>
+<p>To account for previously unmodeled variation, we use the clusters identified in the latent space (e.g., Leiden clusters) as an additional covariate.</p>
+<p>We then retrain the DeepDive model with this new covariate and re-evaluate the latent space. This iterative approach helps disentangle structured biological or technical variation that was not captured in the initial model.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;Residual_first_pass&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">latent</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;leiden&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">discrete_covriate_keys</span> <span class="o">=</span> <span class="n">discrete_covriate_keys</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;Residual_first_pass&#39;</span><span class="p">]</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">DeepDive</span><span class="o">.</span><span class="n">DeepDive</span><span class="p">(</span><span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">,</span>
+                        <span class="n">discrete_covariate_names</span> <span class="o">=</span> <span class="n">discrete_covriate_keys</span><span class="p">,</span>
+                        <span class="n">continuous_covariate_names</span> <span class="o">=</span> <span class="n">continuous_covriate_keys</span><span class="p">,</span>
+                        <span class="o">**</span><span class="n">model_params</span>
+                       <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">train_model</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
+                  <span class="o">**</span><span class="n">train_params</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Epoch Train [300 / 300]: 100%|██████████| 10/10 [00:00&lt;00:00, 11.18it/s, ETA=01d:00h:03:m55s|01d:00h:03:m55s, kl_loss=1.5, recon_loss=3.18e+3]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DeepDive</span><span class="o">.</span><span class="n">plot_history</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_Eval_latent_26_0.png" src="../_images/tutorials_Eval_latent_26_0.png" />
+</div>
+</div>
+<p>Following retraining, the KL divergence decreases, indicating that previously unexplained variation is now captured by the added covariate.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">latent</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_latent</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">covars_to_add</span><span class="o">=</span><span class="p">[])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">latent</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">latent</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">latent</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Residual_first_pass&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_Eval_latent_31_0.png" src="../_images/tutorials_Eval_latent_31_0.png" />
+</div>
+</div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
@@ -687,22 +688,13 @@ Text(0.5, 0, &#39;Effect size&#39;)
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="Training.html"
+       href="Counterfactual.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Training a DeepDive Model</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="Counterfactual.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">Counterfactual Prediction with DeepDive</p>
       </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -722,11 +714,9 @@ Text(0.5, 0, &#39;Effect size&#39;)
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Imports">Imports</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#1.-Load-and-preprocess-the-dataset">1. Load and preprocess the dataset</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#2.-Define-model-and-training-parameters">2. Define model and training parameters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#3.-Train-DeepDive">3. Train DeepDive</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#4.-Compare-groups">4. Compare groups</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#5.-Compare-groups-with-covariate-constraints">5. Compare groups with covariate constraints</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#2.-Train-the-model">2. Train the model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#3.-Evaluate-latent-variation">3. Evaluate latent variation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#4.-Incorporate-residual-variation-and-retrain-the-model">4. Incorporate residual variation and retrain the model</a></li>
 </ul>
   </nav></div>
 

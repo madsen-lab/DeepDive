@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Counterfactual Prediction with DeepDive &#8212; DeepDive  documentation</title>
+    <title>Counterfactual Prediction with DeepDive &#8212; DeepDive Documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -47,6 +47,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/Counterfactual';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Evaluating latent variation" href="Eval_latent.html" />
     <link rel="prev" title="Estimating effect sizes with a DeepDive Model" href="Effect_size_estimation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -139,8 +140,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="DeepDive  documentation - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="DeepDive  documentation - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="DeepDive Documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="DeepDive Documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -166,6 +167,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Training.html">Training a DeepDive Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Effect_size_estimation.html">Estimating effect sizes with a DeepDive Model</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Counterfactual Prediction with DeepDive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Eval_latent.html">Evaluating latent variation</a></li>
 </ul>
 
     </div>
@@ -207,6 +209,53 @@
         <div class="header-article-item">
 
 <div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/madsen-lab/DeepDive" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/madsen-lab/DeepDive/issues/new?title=Issue%20on%20page%20%2Ftutorials/Counterfactual.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
 
 
 
@@ -341,11 +390,11 @@ document.write(`
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import scanpy as sc
-import DeepDive
-import seaborn as sns
-import matplotlib.pyplot as plt
-import numpy as np
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">DeepDive</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 </pre></div>
 </div>
 </div>
@@ -353,7 +402,7 @@ import numpy as np
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from utils import reads_to_fragments, rsquared
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">reads_to_fragments</span><span class="p">,</span> <span class="n">rsquared</span>
 </pre></div>
 </div>
 </div>
@@ -364,18 +413,18 @@ import numpy as np
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata = sc.read_h5ad(&#39;data/sciatac3_liver_10k.h5ad&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s1">&#39;data/sciatac3_liver_10k.h5ad&#39;</span><span class="p">)</span>
 
-# Filter genes detected in fewer than 1% of cells
-min_cells = int(adata.shape[0] * 0.01)
-sc.pp.filter_genes(adata, min_cells=min_cells)
+<span class="c1"># Filter genes detected in fewer than 1% of cells</span>
+<span class="n">min_cells</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_cells</span><span class="o">=</span><span class="n">min_cells</span><span class="p">)</span>
 
-# Ensure unique cell IDs
-adata.obs_names_make_unique()
+<span class="c1"># Ensure unique cell IDs</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs_names_make_unique</span><span class="p">()</span>
 
-# Convert raw reads into fragments
-reads_to_fragments(adata)
-adata.X = adata.layers[&#39;fragments&#39;]
+<span class="c1"># Convert raw reads into fragments</span>
+<span class="n">reads_to_fragments</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;fragments&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -387,8 +436,8 @@ adata.X = adata.layers[&#39;fragments&#39;]
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>adata_ho = adata[(adata.obs[&#39;cell_type&#39;].astype(str) == &#39;Hepatoblasts&#39;) &amp; (adata.obs[&#39;sample_name&#39;].astype(str) == &#39;sample_7_liver&#39;)].copy()
-adata = adata[~adata.obs_names.isin(adata_ho.obs_names)]
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_ho</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;cell_type&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;Hepatoblasts&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;sample_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;sample_7_liver&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="o">~</span><span class="n">adata</span><span class="o">.</span><span class="n">obs_names</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">adata_ho</span><span class="o">.</span><span class="n">obs_names</span><span class="p">)]</span>
 <br/></pre></div>
 </div>
 </div>
@@ -400,16 +449,16 @@ adata = adata[~adata.obs_names.isin(adata_ho.obs_names)]
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>n_decoders = 5
-model_params = {
-    &#39;n_epochs_pretrain_ae&#39; : 200*n_decoders,
-    &#39;n_decoders&#39; : n_decoders,
-}
-train_params = {
-    &#39;max_epoch&#39; : 300*n_decoders,
-    &#39;batch_size&#39; : 1024,
-    &#39;shuffle&#39; : True
-}
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_decoders</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">model_params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;n_epochs_pretrain_ae&#39;</span> <span class="p">:</span> <span class="mi">200</span><span class="o">*</span><span class="n">n_decoders</span><span class="p">,</span>
+    <span class="s1">&#39;n_decoders&#39;</span> <span class="p">:</span> <span class="n">n_decoders</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">train_params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;max_epoch&#39;</span> <span class="p">:</span> <span class="mi">300</span><span class="o">*</span><span class="n">n_decoders</span><span class="p">,</span>
+    <span class="s1">&#39;batch_size&#39;</span> <span class="p">:</span> <span class="mi">1024</span><span class="p">,</span>
+    <span class="s1">&#39;shuffle&#39;</span> <span class="p">:</span> <span class="kc">True</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
@@ -417,8 +466,8 @@ train_params = {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>discrete_covriate_keys = [&#39;sample_name&#39;, &#39;sex&#39;, &#39;batch&#39;, &#39;cell_type&#39;]
-continuous_covriate_keys = [&#39;day_of_pregnancy&#39;]
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">discrete_covriate_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sample_name&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;batch&#39;</span><span class="p">,</span> <span class="s1">&#39;cell_type&#39;</span><span class="p">]</span>
+<span class="n">continuous_covriate_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;day_of_pregnancy&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -430,11 +479,11 @@ continuous_covriate_keys = [&#39;day_of_pregnancy&#39;]
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model = DeepDive.DeepDive(adata = adata,
-                        discrete_covariate_names = discrete_covriate_keys,
-                        continuous_covariate_names = continuous_covriate_keys,
-                        **model_params
-                       )
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">DeepDive</span><span class="o">.</span><span class="n">DeepDive</span><span class="p">(</span><span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">,</span>
+                        <span class="n">discrete_covariate_names</span> <span class="o">=</span> <span class="n">discrete_covriate_keys</span><span class="p">,</span>
+                        <span class="n">continuous_covariate_names</span> <span class="o">=</span> <span class="n">continuous_covriate_keys</span><span class="p">,</span>
+                        <span class="o">**</span><span class="n">model_params</span>
+                       <span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -442,8 +491,8 @@ continuous_covriate_keys = [&#39;day_of_pregnancy&#39;]
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model.train_model(adata, None,
-                  **train_params)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">train_model</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
+                  <span class="o">**</span><span class="n">train_params</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -459,7 +508,7 @@ Epoch Train [1500 / 1500]: 100%|██████████| 10/10 [00:00&lt;
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model.save(&#39;model&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -479,12 +528,12 @@ DeepDIVE model saved at: model
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model = DeepDive.DeepDive(adata = adata,
-                        discrete_covariate_names = discrete_covriate_keys,
-                        continuous_covariate_names = continuous_covriate_keys,
-                        **model_params
-                       )
-model = model.load(adata, &#39;model&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">DeepDive</span><span class="o">.</span><span class="n">DeepDive</span><span class="p">(</span><span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">,</span>
+                        <span class="n">discrete_covariate_names</span> <span class="o">=</span> <span class="n">discrete_covriate_keys</span><span class="p">,</span>
+                        <span class="n">continuous_covariate_names</span> <span class="o">=</span> <span class="n">continuous_covriate_keys</span><span class="p">,</span>
+                        <span class="o">**</span><span class="n">model_params</span>
+                       <span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -496,7 +545,7 @@ model = model.load(adata, &#39;model&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.normalize_total(adata_ho, target_sum = 10_000)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">adata_ho</span><span class="p">,</span> <span class="n">target_sum</span> <span class="o">=</span> <span class="mi">10_000</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -504,7 +553,7 @@ model = model.load(adata, &#39;model&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mean_ho = adata_ho.to_df().mean()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean_ho</span> <span class="o">=</span> <span class="n">adata_ho</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -521,16 +570,16 @@ model = model.load(adata, &#39;model&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Observed sample 7 (excluding Hepatoblasts)
-sample_7 = adata[adata.obs[&#39;sample_name&#39;].astype(str) == &#39;sample_7_liver&#39;].copy()
-rec = model.predict(sample_7, library_size=10_000)
-mean_no = rec.to_df().mean()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Observed sample 7 (excluding Hepatoblasts)</span>
+<span class="n">sample_7</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;sample_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;sample_7_liver&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">rec</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">sample_7</span><span class="p">,</span> <span class="n">library_size</span><span class="o">=</span><span class="mi">10_000</span><span class="p">)</span>
+<span class="n">mean_no</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 
-# Counterfactual prediction: force cell_type = Hepatoblasts
-sample_7.obs[&#39;ct_org&#39;] = sample_7.obs[&#39;cell_type&#39;].copy()
-sample_7.obs[&#39;cell_type&#39;] = &#39;Hepatoblasts&#39;
-rec = model.predict(sample_7, library_size=10_000)
-mean_cf = rec.to_df().mean()
+<span class="c1"># Counterfactual prediction: force cell_type = Hepatoblasts</span>
+<span class="n">sample_7</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;ct_org&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_7</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;cell_type&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">sample_7</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;cell_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Hepatoblasts&#39;</span>
+<span class="n">rec</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">sample_7</span><span class="p">,</span> <span class="n">library_size</span><span class="o">=</span><span class="mi">10_000</span><span class="p">)</span>
+<span class="n">mean_cf</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 <br/></pre></div>
 </div>
 </div>
@@ -542,19 +591,19 @@ mean_cf = rec.to_df().mean()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Counterfactual vs Ground truth
-plt.subplots(figsize=(2,2))
-sns.scatterplot(x=mean_ho, y=mean_cf, s=10, edgecolor=&#39;k&#39;)
-plt.text(x=0.1, y=5, s=f&quot;R2={round(rsquared(mean_ho, mean_cf), 2)}&quot;)
-plt.xlabel(&#39;Ground truth&#39;)
-plt.ylabel(&#39;Counterfactual&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Counterfactual vs Ground truth</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">mean_ho</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">mean_cf</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;R2=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rsquared</span><span class="p">(</span><span class="n">mean_ho</span><span class="p">,</span><span class="w"> </span><span class="n">mean_cf</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Ground truth&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Counterfactual&#39;</span><span class="p">)</span>
 
-# Counterfactual vs All-cell average
-plt.subplots(figsize=(2,2))
-sns.scatterplot(x=mean_no, y=mean_cf, s=10, edgecolor=&#39;k&#39;)
-plt.text(x=0.1, y=5, s=f&quot;R2={round(rsquared(mean_no, mean_cf), 2)}&quot;)
-plt.xlabel(&#39;Ground truth&#39;)
-plt.ylabel(&#39;All cell average&#39;)
+<span class="c1"># Counterfactual vs All-cell average</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">mean_no</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">mean_cf</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;R2=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rsquared</span><span class="p">(</span><span class="n">mean_no</span><span class="p">,</span><span class="w"> </span><span class="n">mean_cf</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Ground truth&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;All cell average&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -623,6 +672,15 @@ Text(0, 0.5, &#39;All cell average&#39;)
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">Estimating effect sizes with a DeepDive Model</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="Eval_latent.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Evaluating latent variation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
