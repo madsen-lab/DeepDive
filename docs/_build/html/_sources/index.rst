@@ -22,6 +22,7 @@ DeepDive documentation
    tutorials/Training
    tutorials/Effect_size_estimation
    tutorials/Counterfactual
+   tutorials/Eval_latent
 
 
 
