@@ -1,0 +1,734 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Modelling scRNA-seq Data with DeepDive &#8212; DeepDive Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/Modelling_scRNAseq';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Evaluating latent variation" href="Eval_latent.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="DeepDive Documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="DeepDive Documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Training.html">Training a DeepDive Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Effect_size_estimation.html">Estimating effect sizes with a DeepDive Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Counterfactual.html">Counterfactual Prediction with DeepDive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Eval_latent.html">Evaluating latent variation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Modelling scRNA-seq Data with DeepDive</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/madsen-lab/DeepDive" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/madsen-lab/DeepDive/issues/new?title=Issue%20on%20page%20%2Ftutorials/Modelling_scRNAseq.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/tutorials/Modelling_scRNAseq.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Modelling scRNA-seq Data with DeepDive</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#1.-Load-and-preprocess-the-dataset">1. Load and preprocess the dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#2.-Define-model-and-training-parameters">2. Define model and training parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#3.-Specify-covariates">3. Specify covariates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#4.-Initialize-and-train-the-model">4. Initialize and train the model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#5.-Evaluate-latent-variation">5. Evaluate latent variation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Summary">Summary</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="Modelling-scRNA-seq-Data-with-DeepDive">
+<h1>Modelling scRNA-seq Data with DeepDive<a class="headerlink" href="#Modelling-scRNA-seq-Data-with-DeepDive" title="Link to this heading">#</a></h1>
+<p>This tutorial demonstrates how to train a <strong>DeepDive</strong> model on single-cell RNA-seq data, evaluate latent structure, and iteratively incorporate previously unmodeled sources of variation through a second training pass.</p>
+<p>Unlike ATAC-seq workflows, scRNA-seq data requires selecting <strong>highly variable genes</strong> and specifying a <strong>Negative Binomial</strong> count distribution.</p>
+<hr class="docutils" />
+<section id="Imports">
+<h2>Imports<a class="headerlink" href="#Imports" title="Link to this heading">#</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">DeepDive</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">sparse</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="1.-Load-and-preprocess-the-dataset">
+<h2>1. Load and preprocess the dataset<a class="headerlink" href="#1.-Load-and-preprocess-the-dataset" title="Link to this heading">#</a></h2>
+<p>We begin with an <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> object containing single-cell RNA-seq profiles. In this example, we use a human pancreas dataset (<code class="docutils literal notranslate"><span class="pre">human_pancreas_norm_complexBatch.h5ad</span></code>), which spans multiple sequencing technologies and includes batch effects.</p>
+<p><strong>scRNA-seq preprocessing steps:</strong></p>
+<ul class="simple">
+<li><p><strong>Highly variable genes (HVGs):</strong> Select the most informative genes to reduce dimensionality and focus modelling on biologically relevant variation.</p></li>
+<li><p><strong>Count layer:</strong> Raw integer counts are extracted from <code class="docutils literal notranslate"><span class="pre">adata.layers['counts']</span></code> and used as model input.</p></li>
+<li><p><strong>Sparse format:</strong> The count matrix is converted to CSR sparse format for memory efficiency.</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#https://docs.scvi-tools.org/en/1.3.3/tutorials/notebooks/multimodal/scarches_scvi_tools.html</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s1">&#39;data/human_pancreas_norm_complexBatch.h5ad&#39;</span><span class="p">)</span>
+<br/><br/></pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span>
+        <span class="n">adata</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;counts&#39;</span><span class="p">]</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[:,</span><span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">highly_variable</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+View of AnnData object with n_obs × n_vars = 16382 × 3545
+    obs: &#39;tech&#39;, &#39;celltype&#39;, &#39;size_factors&#39;
+    var: &#39;highly_variable&#39;, &#39;means&#39;, &#39;dispersions&#39;, &#39;dispersions_norm&#39;
+    uns: &#39;hvg&#39;
+    layers: &#39;counts&#39;
+</pre></div></div>
+</div>
+<p>After preprocessing, <code class="docutils literal notranslate"><span class="pre">adata</span></code> contains 16,382 cells and 3,545 highly variable genes, ready for model training.</p>
+</section>
+<section id="2.-Define-model-and-training-parameters">
+<h2>2. Define model and training parameters<a class="headerlink" href="#2.-Define-model-and-training-parameters" title="Link to this heading">#</a></h2>
+<p>We specify model hyperparameters and training settings.</p>
+<p><strong>Model parameters</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">n_decoders</span></code>: Number of decoders used for reconstruction.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_epochs_pretrain_ae</span></code>: Number of epochs to pretrain the autoencoder before adversarial training begins.</p></li>
+</ul>
+<p><strong>Training parameters</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">max_epoch</span></code>: Maximum number of training epochs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">batch_size</span></code>: Number of cells per training batch.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shuffle</span></code>: Whether to shuffle the training data each epoch.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">distribution</span></code>: The count distribution assumed by the decoder. Use <code class="docutils literal notranslate"><span class="pre">'NB'</span></code> (Negative Binomial) for scRNA-seq count data, which models overdispersion typical in gene expression.</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_decoders</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">model_params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;n_epochs_pretrain_ae&#39;</span> <span class="p">:</span> <span class="mi">200</span><span class="o">*</span><span class="n">n_decoders</span><span class="p">,</span>
+    <span class="s1">&#39;n_decoders&#39;</span> <span class="p">:</span> <span class="n">n_decoders</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">train_params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;max_epoch&#39;</span> <span class="p">:</span> <span class="mi">300</span><span class="o">*</span><span class="n">n_decoders</span><span class="p">,</span>
+    <span class="s1">&#39;batch_size&#39;</span> <span class="p">:</span> <span class="mi">1024</span><span class="p">,</span>
+    <span class="s1">&#39;shuffle&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;distribution&#39;</span> <span class="p">:</span> <span class="s1">&#39;NB&#39;</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="3.-Specify-covariates">
+<h2>3. Specify covariates<a class="headerlink" href="#3.-Specify-covariates" title="Link to this heading">#</a></h2>
+<p>DeepDive disentangles known covariates from biological variation. Here, we specify sequencing technology (<code class="docutils literal notranslate"><span class="pre">tech</span></code>) as the only discrete covariate, as this dataset spans multiple platforms with associated batch effects.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">discrete_covriate_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;tech&#39;</span><span class="p">]</span>
+<br/></pre></div>
+</div>
+</div>
+</section>
+<section id="4.-Initialize-and-train-the-model">
+<h2>4. Initialize and train the model<a class="headerlink" href="#4.-Initialize-and-train-the-model" title="Link to this heading">#</a></h2>
+<p>The model is initialized with the AnnData object and covariate specifications, then trained using the defined parameters.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">DeepDive</span><span class="o">.</span><span class="n">DeepDive</span><span class="p">(</span><span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">,</span>
+                        <span class="n">discrete_covariate_names</span> <span class="o">=</span> <span class="n">discrete_covriate_keys</span><span class="p">,</span>
+                        <span class="o">**</span><span class="n">model_params</span>
+                       <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">train_model</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
+                  <span class="o">**</span><span class="n">train_params</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Epoch Train [1500 / 1500]: 100%|██████████| 16/16 [00:00&lt;00:00, 54.60it/s, ETA=01d:00h:06:m02s|01d:00h:06:m02s, kl_loss=12, recon_loss=1.91e+3]
+</pre></div></div>
+</div>
+<p>Training history (loss curves) can be visualized with:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DeepDive</span><span class="o">.</span><span class="n">plot_history</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_Modelling_scRNAseq_17_0.png" src="../_images/tutorials_Modelling_scRNAseq_17_0.png" />
+</div>
+</div>
+<p>The KL divergence remains relatively high, suggesting that substantial variation is still being captured in the residual (unknown) component of the model. This indicates that not all sources of structure in the data are explained by the provided covariates, and that additional biological or technical factors may still be influencing chromatin accessibility.</p>
+</section>
+<section id="5.-Evaluate-latent-variation">
+<h2>5. Evaluate latent variation<a class="headerlink" href="#5.-Evaluate-latent-variation" title="Link to this heading">#</a></h2>
+<p>To assess whether unmodeled sources of variation influence gene expression, we examine the learned latent representation.</p>
+<p>Here, we compute the latent embedding without adding additional covariates and visualize it using UMAP. Clustering in this space may indicate residual structure not explained by the specified covariates (e.g., cell type, uncharacterized batch effects).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">latent</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_latent</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">covars_to_add</span><span class="o">=</span><span class="p">[])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">latent</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">latent</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">latent</span><span class="p">,</span> <span class="n">resolution</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">latent</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">discrete_covriate_keys</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;celltype&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_Modelling_scRNAseq_24_0.png" src="../_images/tutorials_Modelling_scRNAseq_24_0.png" />
+</div>
+</div>
+</section>
+<section id="Summary">
+<h2>Summary<a class="headerlink" href="#Summary" title="Link to this heading">#</a></h2>
+<p>This notebook covers the complete workflow for modelling scRNA-seq data with DeepDive:</p>
+<ul class="simple">
+<li><p>Preparing a scRNA-seq dataset using highly variable gene selection and raw count extraction</p></li>
+<li><p>Defining model parameters with a Negative Binomial distribution appropriate for RNA counts</p></li>
+<li><p>Training DeepDive to disentangle sequencing technology effects</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Eval_latent.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Evaluating latent variation</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#1.-Load-and-preprocess-the-dataset">1. Load and preprocess the dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#2.-Define-model-and-training-parameters">2. Define model and training parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#3.-Specify-covariates">3. Specify covariates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#4.-Initialize-and-train-the-model">4. Initialize and train the model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#5.-Evaluate-latent-variation">5. Evaluate latent variation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Summary">Summary</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Andreas Møller and Jesper Madsen
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Andreas Møller and Jesper Madsen.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

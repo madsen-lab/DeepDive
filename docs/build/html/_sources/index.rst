@@ -23,6 +23,7 @@ DeepDive documentation
    tutorials/Effect_size_estimation
    tutorials/Counterfactual
    tutorials/Eval_latent
+   tutorials/Modelling_scRNAseq
 
 
 
