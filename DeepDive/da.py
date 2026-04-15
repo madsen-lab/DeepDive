@@ -90,7 +90,7 @@ def compare_groups(
     # GroupA
     groupA_recon = (
         torch.stack(
-            [model.known.decoder_list[x](base + embedding_A) for x in range(model.n_decoders)]
+            [model.known.decoder_list[x](base + embedding_A)[0] for x in range(model.n_decoders)]
         )
         .detach()
         .cpu()
@@ -99,7 +99,7 @@ def compare_groups(
     # GroupB
     groupB_recon = (
         torch.stack(
-            [model.known.decoder_list[x](base + embedding_B) for x in range(model.n_decoders)]
+            [model.known.decoder_list[x](base + embedding_B)[0] for x in range(model.n_decoders)]
         )
         .detach()
         .cpu()
